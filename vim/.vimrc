@@ -1,6 +1,6 @@
-filetype off
+filetype off 
+call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
-filetype plugin indent on
 
 set nocompatible
 
@@ -27,7 +27,8 @@ set cursorline
 set ttyfast
 set ruler
 set backspace=indent,eol,start
-set relativenumber
+" set relativenumber
+set number
 set laststatus=2
 set undofile
 
@@ -89,42 +90,6 @@ map <C-k> <C-w>k
 map <C-l> <C-w>l
 map <leader>w <C-w>v<C-w>l
 
-" Folding
-set foldlevelstart=0
-nnoremap <Space> za
-vnoremap <Space> za
-noremap <leader>ft Vatzf
-
-function! MyFoldText()
-    let line = getline(v:foldstart)
-
-    let nucolwidth = &fdc + &number * &numberwidth
-    let windowwidth = winwidth(0) - nucolwidth - 3
-    let foldedlinecount = v:foldend - v:foldstart
-
-    " expand tabs into spaces
-    let onetab = strpart('          ', 0, &tabstop)
-    let line = substitute(line, '\t', onetab, 'g')
-
-    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-    let fillcharcount = windowwidth - len(line) - len(foldedlinecount) - 4
-    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction
-set foldtext=MyFoldText()
-
-" Fuck you, help key.
-set fuoptions=maxvert,maxhorz
-inoremap <F1> <ESC>:set invfullscreen<CR>a
-nnoremap <F1> :set invfullscreen<CR>
-vnoremap <F1> :set invfullscreen<CR>
-
-" Various syntax stuff
-au BufNewFile,BufRead *.less set filetype=less
-au BufRead,BufNewFile *.scss set filetype=scss
-
-au BufRead,BufNewFile *.confluencewiki set filetype=confluencewiki
-au BufRead,BufNewFile *.confluencewiki set wrap linebreak nolist
-
 au BufNewFile,BufRead *.m*down set filetype=markdown
 au BufNewFile,BufRead *.m*down nnoremap <leader>1 yypVr=
 au BufNewFile,BufRead *.m*down nnoremap <leader>2 yypVr-
@@ -154,36 +119,6 @@ map <leader>q gqip
 
 nmap <leader>m :make<cr>
 
-" Google's JSLint
-au BufNewFile,BufRead *.js set makeprg=gjslint\ %
-au BufNewFile,BufRead *.js set errorformat=%-P-----\ FILE\ \ :\ \ %f\ -----,Line\ %l\\,\ E:%n:\ %m,%-Q,%-GFound\ %s,%-GSome\ %s,%-Gfixjsstyle%s,%-Gscript\ can\ %s,%-G
-
-" TESTING GOAT APPROVES OF THESE LINES
-au BufNewFile,BufRead test_*.py set makeprg=nosetests\ --machine-out\ --nocapture
-au BufNewFile,BufRead test_*.py set shellpipe=2>&1\ >/dev/null\ \|\ tee
-au BufNewFile,BufRead test_*.py set errorformat=%f:%l:\ %m
-au BufNewFile,BufRead test_*.py nmap <silent> <Leader>n <Plug>MakeGreen
-au BufNewFile,BufRead test_*.py nmap <Leader>N :make<cr>
-nmap <silent> <leader>ff :QFix<cr>
-nmap <leader>fn :cn<cr>
-nmap <leader>fp :cp<cr>
-
-command -bang -nargs=? QFix call QFixToggle(<bang>0)
-function! QFixToggle(forced)
-  if exists("g:qfix_win") && a:forced == 0
-    cclose
-    unlet g:qfix_win
-  else
-    copen 10
-    let g:qfix_win = bufnr("$")
-  endif
-endfunction
-
-
-" TODO: Put this in filetype-specific files
-au BufNewFile,BufRead *.less set foldmethod=marker
-au BufNewFile,BufRead *.less set foldmarker={,}
-au BufNewFile,BufRead *.less set nocursorline
 au BufRead,BufNewFile /etc/nginx/conf/* set ft=nginx
 au BufRead,BufNewFile /etc/nginx/sites-available/* set ft=nginx
 au BufRead,BufNewFile /usr/local/etc/nginx/sites-available/* set ft=nginx
@@ -194,19 +129,12 @@ map <leader>v V`]
 " HTML tag closing
 inoremap <C-_> <Space><BS><Esc>:call InsertCloseTag()<cr>a
 
-" Faster Esc
-inoremap <Esc> <nop>
-inoremap jj <ESC>
-
 " Scratch
 nmap <leader><tab> :Sscratch<cr><C-W>x<C-j>:resize 15<cr>
 
 " Make selecting inside an HTML tag less dumb
 nnoremap Vit vitVkoj
 nnoremap Vat vatV
-
-" Diff
-nmap <leader>d :!hg diff %<cr>
 
 " Rainbows!
 nmap <leader>R :RainbowParenthesesToggle<CR>
@@ -244,11 +172,6 @@ au FocusLost * :wa
 " Stop it, hash key
 inoremap # X<BS>#
 
-" Cram tests
-au BufNewFile,BufRead *.t set filetype=cram
-let cram_fold=1
-autocmd Syntax cram setlocal foldlevel=1
-
 " Show syntax highlighting groups for word under cursor
 nmap <C-S> :call SynStack()<CR>
 function! SynStack()
@@ -266,7 +189,7 @@ map <F4> :TlistToggle<cr>
 map <leader>T :!/usr/local/bin/ctags --exclude='**/ckeditor' -R . $(test -f .venv && echo ~/lib/virtualenvs/`cat .venv`)<CR>
 
 " Rope
-source $HOME/.vim/sadness/ropevim/rope.vim
+source /Users/john/.vim/sadness/ropevim/rope.vim
 let ropevim_enable_shortcuts = 0
 let ropevim_guess_project = 1
 noremap <leader>rr :RopeRename<CR>
@@ -293,3 +216,4 @@ if has('gui_running')
 
     highlight SpellBad term=underline gui=undercurl guisp=Orange
 endif
+

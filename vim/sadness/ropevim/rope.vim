@@ -1,2 +1,2 @@
-let $PYTHONPATH = "/Users/sjl/lib/dotfiles/vim/sadness/ropevim/pylibs:".$PYTHONPATH
-source /Users/sjl/lib/dotfiles/vim/sadness/ropevim/src/ropevim/ropevim.vim
+let $PYTHONPATH = "/Users/john/.vim/sadness/ropevim/pylibs:".$PYTHONPATH
+source /Users/john/.vim/sadness/ropevim/src/ropevim/ropevim.vim
