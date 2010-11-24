@@ -1,219 +1,172 @@
-filetype off 
+" Load Pathogen plugins.
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
 
+" Allows us to jump between HTML tags, and more.
+runtime macros/matchit.vim
+
+" Don't care about Vi, only Vim.
 set nocompatible
 
-" Security
-set modelines=0
+" Backspace works everywhere(?) in insert mode.
+set backspace=indent,eol,start
 
-" Tabs/spaces
-set tabstop=4
-set shiftwidth=4
-set softtabstop=4
-set expandtab
-
-" Basic options
-set encoding=utf-8
-set scrolloff=3
+" Auto-indent when Enter is pressed in insert mode.
 set autoindent
-set showmode
+
+" Have 50 lines of command history.
+set history=50
+
+" Show the current cursor position.
+set ruler
+
+" Show incomplete commands.
 set showcmd
+
+" Set encoding to UTF-8.
+set encoding=utf-8
+
+" Always try to show 4 lines above and below the current line.
+set scrolloff=4
+
+" Show the current mode.
+set showmode
+
+" Allows unsaved files to be hidden.
 set hidden
+
+" Allow tab completion in the command window.
 set wildmenu
 set wildmode=list:longest
-set visualbell
-set cursorline
+
+" We're on a fast terminal connection.
 set ttyfast
-set ruler
-set backspace=indent,eol,start
-" set relativenumber
+
+" Show line numbers in the gutter.
 set number
+
+" Always show a status line.
 set laststatus=2
-set undofile
 
-" Backups
-set backupdir=~/.vim/tmp/backup// " backups
-set directory=~/.vim/tmp/swap//   " swap files
-set backup                        " enable backups
-
-" Leader
+" Set the leader to ',', which is fairly common.
 let mapleader = ","
 
-" Searching
+"" Searching
+" Use normal style regexes, rather than Vim's own style.
 nnoremap / /\v
 vnoremap / /\v
+
+" Ignore case, unless the regex has uppercase characters.
 set ignorecase
 set smartcase
+
+" Show partial matches.
 set incsearch
 set showmatch
+
+" Highlight search results.
 set hlsearch
+
+" Search patterns are global by default.
 set gdefault
 map <leader><space> :noh<cr>
-runtime macros/matchit.vim
-nmap <tab> %
-vmap <tab> %
 
-" Soft/hard wrapping
+" Wrapping
 set wrap
 set textwidth=79
-set formatoptions=qrn1
-set colorcolumn=85
+set formatoptions=qrn1 " q = format comments; r = insert comment leader; n = recognise numbered lists, 1 = try to wrap before a one-letter word.
 
 " Use the same symbols as TextMate for tabstops and EOLs
 set list
 set listchars=tab:▸\ ,eol:¬
 
-" Color scheme (terminal)
-syntax on
-set background=dark
-colorscheme delek
-
-" NERD Tree
-map <F2> :NERDTreeToggle<cr>
-let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$']
-
-" Use the damn hjkl keys
+" Don't allow use of the arrow keys in normal mode.
 nnoremap <up> <nop>
 nnoremap <down> <nop>
 nnoremap <left> <nop>
 nnoremap <right> <nop>
 
-" And make them fucking work, too.
+" Make j and k work visually, rather than on actual lines.
 nnoremap j gj
 nnoremap k gk
 
-" Easy buffer navigation
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
-map <leader>w <C-w>v<C-w>l
-
-au BufNewFile,BufRead *.m*down set filetype=markdown
-au BufNewFile,BufRead *.m*down nnoremap <leader>1 yypVr=
-au BufNewFile,BufRead *.m*down nnoremap <leader>2 yypVr-
-au BufNewFile,BufRead *.m*down nnoremap <leader>3 I### <ESC>
-
-" Sort CSS
+" Sort CSS properties
 map <leader>S ?{<CR>jV/^\s*\}?$<CR>k:sort<CR>:noh<CR>
 
-" Clean whitespace
-map <leader>W :%s/\s\+$//<cr>:let @/=''<CR>
-
-" Exuberant ctags!
-let Tlist_Ctags_Cmd = "/usr/local/bin/ctags"
-let Tlist_WinWidth = 50
-map <F4> :TlistToggle<cr>
-map <F5> :!/usr/local/bin/ctags -R --c++-kinds=+p --fields=+iaS --extra=+q --exclude='@.ctagsignore' .<cr>
+" Use syntax highlighting, and highlight search results.
+if &t_Co > 2 || has("gui_running")
+    syntax on
+    set hlsearch
+endif
 
 " Ack
 map <leader>a :Ack 
+
+" NERD Tree
+map <F2> :NERDTreeToggle<cr>
+let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$']
 
 " Yankring
 nnoremap <silent> <F3> :YRShow<cr>
 nnoremap <silent> <leader>y :YRShow<cr>
 
-" Formatting, TextMate-style
-map <leader>q gqip
-
-nmap <leader>m :make<cr>
-
-au BufRead,BufNewFile /etc/nginx/conf/* set ft=nginx
-au BufRead,BufNewFile /etc/nginx/sites-available/* set ft=nginx
-au BufRead,BufNewFile /usr/local/etc/nginx/sites-available/* set ft=nginx
-
-" Easier linewise reselection
-map <leader>v V`]
-
-" HTML tag closing
-inoremap <C-_> <Space><BS><Esc>:call InsertCloseTag()<cr>a
+" Gundo
+map <F4> :GundoToggle<cr>
 
 " Scratch
 nmap <leader><tab> :Sscratch<cr><C-W>x<C-j>:resize 15<cr>
 
-" Make selecting inside an HTML tag less dumb
-nnoremap Vit vitVkoj
-nnoremap Vat vatV
+" Safe undo states.
+set undofile
+set undodir=~/.vim/tmp/undo/
 
-" Rainbows!
-nmap <leader>R :RainbowParenthesesToggle<CR>
-
-" Edit vim stuff.
+" Edit vimrc and snippets stuff.
 nmap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 nmap <leader>es <C-w><C-v><C-l>:e ~/.vim/snippets/<cr>
 
 " Sudo to write
 cmap w!! w !sudo tee % >/dev/null
 
-" Easy filetype switching
-nnoremap _dt :set ft=htmldjango<CR>
-nnoremap _jt :set ft=htmljinja<CR>
-nnoremap _cw :set ft=confluencewiki<CR>
-"
-" HALP
-nnoremap _wtfcw :!open 'http://confluence.atlassian.com/renderer/notationhelp.action?section=all'<cr>
-
-" VCS Stuff
-let VCSCommandMapPrefix = "<leader>h"
-
-" Disable useless HTML5 junk
-let g:event_handler_attributes_complete = 0
-let g:rdfa_attributes_complete = 0
-let g:microdata_attributes_complete = 0
-let g:atia_attributes_complete = 0
-
-" Shouldn't need shift
-nnoremap ; :
-
-" Save when losing focus
-au FocusLost * :wa
-
 " Stop it, hash key
 inoremap # X<BS>#
 
-" Show syntax highlighting groups for word under cursor
-nmap <C-S> :call SynStack()<CR>
-function! SynStack()
-  if !exists("*synstack")
-    return
-  endif
-  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-endfunc
+" Command-T ignore files
+set wildignore+=*.o,*.obj,.git,*.pyc,bin/**,include/**,lib/**,man/**,*.db
 
-" Tags!
-let Tlist_Ctags_Cmd = "/usr/local/bin/ctags"
-let Tlist_WinWidth = 50
-let Tlist_Show_One_File = 1
-map <F4> :TlistToggle<cr>
-map <leader>T :!/usr/local/bin/ctags --exclude='**/ckeditor' -R . $(test -f .venv && echo ~/lib/virtualenvs/`cat .venv`)<CR>
-
-" Rope
-source /Users/john/.vim/sadness/ropevim/rope.vim
-let ropevim_enable_shortcuts = 0
-let ropevim_guess_project = 1
-noremap <leader>rr :RopeRename<CR>
-vnoremap <leader>rm :RopeExtractMethod<CR>
-noremap <leader>roi :RopeOrganizeImports<CR>
+" Map Control-movements to split movements.
+map <C-h> <C-w>h
+map <C-j> <C-w>j
+map <C-k> <C-w>k
+map <C-l> <C-w>l
 
 if has('gui_running')
+    " Set the font to Menlo.
     set guifont=Menlo:h12
+    " Set the colour scheme.
     colorscheme molokai
     set background=dark
 
+    " Start-up in full screen.
+    set fuoptions=maxvert,maxhorz
+    au GUIEnter * set fullscreen
+
+    " Hide the Mac-style scroll bars.
     set go-=T
     set go-=l
     set go-=L
     set go-=r
     set go-=R
-
-    if has("gui_macvim")
-        macmenu &File.New\ Tab key=<nop>
-        map <leader>t <Plug>PeepOpen
-    end
-
-    let g:sparkupExecuteMapping = '<D-e>'
-
-    highlight SpellBad term=underline gui=undercurl guisp=Orange
 endif
 
+" By default, use 4 spaces for a tab.
+set tabstop=4 softtabstop=4 shiftwidth=4 expandtab
+
+if has("autocmd")
+    " Enable file type detection
+    filetype plugin indent on
+
+    " Tabs for HTML, CSS & JavaScript. Spaces for Python.
+    autocmd FileType html setlocal ts=4 sts=4 sw=4 noexpandtab
+    autocmd FileType css setlocal ts=4 sts=4 sw=4 noexpandtab
+    autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+endif
