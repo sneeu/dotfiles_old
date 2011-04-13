@@ -1,3 +1,6 @@
+" Use the homebrew version of ctags, rather than Mac OS's version
+let Tlist_Ctags_Cmd = '/usr/local/bin/ctags'
+
 " Load Pathogen plugins.
 call pathogen#helptags()
 call pathogen#runtime_append_all_bundles()
@@ -7,6 +10,9 @@ runtime macros/matchit.vim
 
 " Don't care about Vi, only Vim.
 set nocompatible
+
+" Don't beep -- I usually press Esc twice.
+set visualbell
 
 " Backspace works everywhere(?) in insert mode.
 set backspace=indent,eol,start
@@ -37,7 +43,7 @@ set hidden
 
 " Allow tab completion in the command window.
 set wildmenu
-set wildmode=list:longest
+set wildmode=longest,list
 
 " We're on a fast terminal connection.
 set ttyfast
@@ -107,6 +113,7 @@ map <F2> :NERDTreeToggle<cr>
 let NERDTreeIgnore=['.vim$', '\~$', '.*\.pyc$', 'pip-log\.txt$']
 
 " Yankring
+let g:yankring_history_dir = '$HOME/.vim/'
 nnoremap <silent> <F3> :YRShow<cr>
 nnoremap <silent> <leader>y :YRShow<cr>
 
@@ -130,8 +137,17 @@ cmap w!! w !sudo tee % >/dev/null
 " Stop it, hash key
 inoremap # X<BS>#
 
+" Close tags.
+inoremap <C-_> <Space><BS><Esc>:call InsertCloseTag()<cr>a
+
+" Quickly switch to Django template syntax.
+nnoremap _dj :set ft=htmldjango<CR>
+nnoremap _ht :set ft=html<CR>
+
 " Command-T ignore files
-set wildignore+=*.o,*.obj,.git,*.pyc,bin/**,include/**,lib/**,man/**,*.db
+set wildignore+=*.o,*.obj,.git,*.pyc,build/**,bin/**,include/**,lib/**,man/**,*.db
+map <leader>t :CommandT<cr>
+map <leader>T :CommandTFlush<cr>
 
 " Map Control-movements to split movements.
 map <C-h> <C-w>h
@@ -139,12 +155,30 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" A function to strip trailing whitespace.
+function! <SID>StripTrailingWhitespaces()
+    " Preparation: save last search, and cursor position.
+    let _s=@/
+    let l = line(".")
+    let c = col(".")
+    " Do the business:
+    %s/\s\+$//e
+    " Clean up: restore previous search history, and cursor position
+    let @/=_s
+    call cursor(l, c)
+endfunction
+
+" Map F5 to strip trailing whitespace.
+nnoremap <silent> <F5> :call <SID>StripTrailingWhitespaces()<CR>
+
 if has('gui_running')
     " Set the font to Menlo.
-    set guifont=Menlo:h12
+    set guifont=Andale\ Mono:h13
+
     " Set the colour scheme.
-    colorscheme molokai
     set background=dark
+    " colorscheme molokai
+    colorscheme solarized
 
     " Start-up in full screen.
     set fuoptions=maxvert,maxhorz
@@ -168,5 +202,15 @@ if has("autocmd")
     " Tabs for HTML, CSS & JavaScript. Spaces for Python.
     autocmd FileType html setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType css setlocal ts=4 sts=4 sw=4 noexpandtab
+
+    autocmd BufNewFile,BufRead *.less setlocal filetype=less
+    autocmd FileType less setlocal ts=4 sts=4 sw=4 noexpandtab
+
     autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
+    autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
+
+    " Highlight lines over 80 characters long.
+    set colorcolumn=+1
 endif
+
+map <f12> :!/usr/local/bin/ctags -R .<cr>
