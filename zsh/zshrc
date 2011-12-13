@@ -3,7 +3,8 @@ export ZSH=$HOME/.oh-my-zsh
 
 # Set to the name theme to load.
 # Look in ~/.oh-my-zsh/themes/
-export ZSH_THEME="macovsky"
+#export ZSH_THEME="macovsky"
+export ZSH_THEME="minimal2"
 
 # Set to this to use case-sensitive completion
 # export CASE_SENSITIVE="true"
@@ -16,12 +17,24 @@ export ZSH_THEME="macovsky"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git)
+plugins=(brew cloudapp git github vagrant)
 
 source $ZSH/oh-my-zsh.sh
 source ~/.zsh_local
 
-export PROMPT='%{$fg[cyan]%}%m%{$reset_color%} %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)%{$reset_color%}%B$%b '
+export CLASSPATH=`cat ~/.clojure`
 
-# Customize to your needs...
-export PATH=~/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+#export PROMPT='%{$fg[cyan]%}%m%{$reset_color%} %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)%{$reset_color%}%B$%b '
+
+export PATH=~/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+
+. $HOME/Projects/z/z.sh
+function precmd () {
+  _z --add "$(pwd -P)"
+}
+
+alias va=vagrant
+alias vaup="vagrant up"
+alias vassh="vagrant ssh"
+
+alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
