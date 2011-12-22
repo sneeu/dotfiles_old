@@ -17,7 +17,7 @@ export ZSH_THEME="minimal2"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cloudapp git github vagrant)
+plugins=(brew cloudapp git github git-flow vagrant)
 
 source $ZSH/oh-my-zsh.sh
 source ~/.zsh_local
