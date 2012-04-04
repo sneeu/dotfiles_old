@@ -17,16 +17,19 @@ export ZSH_THEME="minimal2"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cloudapp git github git-flow vagrant)
+plugins=(brew cloudapp git github git-flow lein vagrant)
 
 source $ZSH/oh-my-zsh.sh
 source ~/.zsh_local
+source /usr/local/bin/virtualenvwrapper.sh
+
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 
 export CLASSPATH=`cat ~/.clojure`
 
 #export PROMPT='%{$fg[cyan]%}%m%{$reset_color%} %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)%{$reset_color%}%B$%b '
 
-export PATH=~/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+export PATH=~/bin:/usr/local/Cellar/ruby/1.9.3-p125/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 
 . $HOME/Projects/z/z.sh
 function precmd () {
@@ -34,7 +37,12 @@ function precmd () {
 }
 
 alias va=vagrant
-alias vaup="vagrant up"
-alias vassh="vagrant ssh"
+alias tx=tmux
+alias ca=cloudapp
 
-alias vim="/Applications/MacVim.app/Contents/MacOS/Vim"
+function wo () {
+    workon $1
+    cd $WORKON_HOME/$1
+}
+
+[[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm
