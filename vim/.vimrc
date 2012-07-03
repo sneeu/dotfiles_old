@@ -1,11 +1,35 @@
-call pathogen#helptags()
-call pathogen#runtime_append_all_bundles()
-
 set nocompatible
 syntax enable
 set encoding=utf-8
 set showcmd                     " display incomplete commands
-filetype plugin indent on       " load file type plugins + indentation
+filetype off
+
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'VimClojure'
+Bundle 'gmarik/vundle'
+Bundle 'sjl/badwolf'
+Bundle 'vim-flake8'
+Bundle 'mileszs/ack.vim'
+Bundle 'ctrlp.vim'
+Bundle 'html5.vim'
+Bundle 'jade.vim'
+Bundle 'JuliaLang/julia-vim'
+Bundle 'less.vim'
+Bundle 'LustyJuggler'
+Bundle 'Markdown'
+Bundle 'snipMate'
+Bundle 'The-NERD-Commenter'
+Bundle 'unimpaired.vim'
+Bundle 'vim-coffee-script'
+Bundle 'vim-powerline'
+Bundle 'YankRing.vim'
+
+
+filetype plugin indent on
 
 "" Whitespace
 set nowrap                      " don't wrap lines
@@ -19,8 +43,6 @@ set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
 set showmatch                   " and show matches
-
-noremap <leader><space> :noh<cr>
 
 
 set ruler
@@ -62,10 +84,14 @@ set formatoptions=qrn1 " q = format comments; r = insert comment leader; n = rec
 set list
 set listchars=tab:▸\ ,eol:¬
 
+nmap <leader><space> :noh<cr>
+nmap <leader>s <C-w><C-v><C-l><cr>
 nmap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
+nmap <leader>es <C-w><C-v><C-l>:e ~/.vim/snippets/<cr>
 nmap <leader>l :LustyJuggler<cr>
 nmap <leader>k :LustyJugglePrevious<cr>
 nmap <leader>p :CtrlP<cr>
+let g:LustyJugglerDefaultMappings = 0
 
 nnoremap <up> <nop>
 nnoremap <down> <nop>
@@ -87,10 +113,10 @@ set undofile
 set undodir=~/.vim/tmp/undo/
 
 " Ack
-set grepformat=%f:%l:%c:%m
+let g:ackprg="ack\\ -H\\ --nocolor\\ --nogroup\\ --ignore-dir=lib\\ --ignore-dir=static\\ --ignore-dir=media\\ --ignore-dir=html_coverage"
 nmap <leader>a :Ack 
 
-set wildignore+=*.o,*.obj,.git,*.pyc,build,bin,include,lib,man,src,*.db
+set wildignore+=*.o,*.obj,.git,*.pyc,build,bin,include,lib,man,*.db
 let g:ctrlp_working_path_mode = 0
 
 nmap <C-h> <C-w>h
@@ -105,10 +131,6 @@ set t_Co=256
 set background=dark
 colorscheme badwolf
 
-let g:indent_guides_auto_colors = 1
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup = 0
-
 set colorcolumn=+1
 
 hi ColorColumn ctermbg=235
@@ -120,6 +142,7 @@ if has("autocmd")
     autocmd FileType htmldjango setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType mustache setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType markdown setlocal ts=4 sts=4 sw=4 expandtab
+    autocmd FileType php setlocal ts=4 sts=4 sw=4 noexpandtab
 
     autocmd BufNewFile,BufRead *.less setlocal filetype=less
     autocmd FileType less setlocal ts=4 sts=4 sw=4 noexpandtab
@@ -127,10 +150,7 @@ if has("autocmd")
     autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
 
-    "autocmd VimEnter * RainbowParenthesesToggle
-    "autocmd Syntax * RainbowParenthesesLoadRound
-    "autocmd Syntax * RainbowParenthesesLoadSquare
-    "autocmd Syntax * RainbowParenthesesLoadBraces
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=3
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 endif
+

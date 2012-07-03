@@ -17,7 +17,10 @@ export ZSH_THEME="minimal2"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cloudapp git github git-flow lein vagrant)
+plugins=(brew cloudapp git github git-flow lein vagrant zsh-syntax-highlighting)
+
+export EDITOR=vim
+export VISUAL=vim
 
 source $ZSH/oh-my-zsh.sh
 source ~/.zsh_local
@@ -29,7 +32,7 @@ export CLASSPATH=`cat ~/.clojure`
 
 #export PROMPT='%{$fg[cyan]%}%m%{$reset_color%} %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)%{$reset_color%}%B$%b '
 
-export PATH=~/bin:/usr/local/Cellar/ruby/1.9.3-p125/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+export PATH=~/bin:/usr/local/texlive/2011/bin/x86_64-darwin/:/usr/local/share/python:~/bin:/usr/local/Cellar/ruby/1.9.3-p125/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 
 . $HOME/Projects/z/z.sh
 function precmd () {
