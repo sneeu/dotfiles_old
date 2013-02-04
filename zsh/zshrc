@@ -1,6 +1,23 @@
 # Path to your oh-my-zsh configuration.
 export ZSH=$HOME/.oh-my-zsh
 
+function current_branch() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo ${ref#refs/heads/}
+}
+
+function current_repository() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo $(git remote -v | cut -d':' -f 2)
+}
+
+function current_rev() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+    echo $(git rev-parse --short HEAD)
+}
+
+VIRTUAL_ENV_DISABLE_PROMPT=1
+
 # Set to the name theme to load.
 # Look in ~/.oh-my-zsh/themes/
 #export ZSH_THEME="macovsky"
@@ -17,35 +34,45 @@ export ZSH_THEME="minimal2"
 
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(brew cloudapp git github git-flow lein vagrant zsh-syntax-highlighting)
+plugins=(brew cloudapp github git-flow lein vagrant zsh-syntax-highlighting)
 
 export EDITOR=vim
 export VISUAL=vim
 
 source $ZSH/oh-my-zsh.sh
 source ~/.zsh_local
+
+export PATH=~/bin:/usr/local/share/npm/bin:/usr/local/share/python:/usr/local/Cellar/ruby/1.9.3-p194/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
+
 source /usr/local/bin/virtualenvwrapper.sh
 
-export VIRTUAL_ENV_DISABLE_PROMPT=1
-
 export CLASSPATH=`cat ~/.clojure`
-
-#export PROMPT='%{$fg[cyan]%}%m%{$reset_color%} %{$fg[green]%}%~%{$reset_color%} $(git_prompt_info)%{$reset_color%}%B$%b '
-
-export PATH=~/bin:/usr/local/texlive/2011/bin/x86_64-darwin/:/usr/local/share/python:~/bin:/usr/local/Cellar/ruby/1.9.3-p125/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin
 
 . $HOME/Projects/z/z.sh
 function precmd () {
   _z --add "$(pwd -P)"
 }
 
-alias va=vagrant
+alias g=git
+alias gau="git add --update"
+alias gci="git commit"
+alias gco="git checkout"
+alias gst="git st"
+alias gf="git flow"
+alias p=python
+alias s=ssh
+alias v=vim
 alias tx=tmux
 alias ca=cloudapp
+alias tally="python ~/Projects/lastfm_tally/tally.py sneeu g-moose iamtef"
 
 function wo () {
     workon $1
     cd $WORKON_HOME/$1
+}
+
+function mwiki () {
+    dig +short txt "$*".wp.dg.cx
 }
 
 [[ -s $HOME/.rvm/scripts/rvm ]] && source $HOME/.rvm/scripts/rvm

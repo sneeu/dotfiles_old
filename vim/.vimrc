@@ -7,12 +7,14 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+let g:flake8_cmd="/usr/local/share/python/flake8"
+
 " let Vundle manage Vundle
 " required! 
 Bundle 'VimClojure'
 Bundle 'gmarik/vundle'
 Bundle 'sjl/badwolf'
-Bundle 'vim-flake8'
+Bundle 'nvie/vim-flake8'
 Bundle 'mileszs/ack.vim'
 Bundle 'ctrlp.vim'
 Bundle 'html5.vim'
@@ -22,6 +24,8 @@ Bundle 'less.vim'
 Bundle 'LustyJuggler'
 Bundle 'Markdown'
 Bundle 'snipMate'
+Bundle 'Syntastic'
+Bundle 'Tagbar'
 Bundle 'The-NERD-Commenter'
 Bundle 'unimpaired.vim'
 Bundle 'vim-coffee-script'
@@ -79,6 +83,8 @@ function! MyFoldText() " {{{
 endfunction " }}}
 set foldtext=MyFoldText()
 
+set splitright
+set splitbelow
 set textwidth=79
 set formatoptions=qrn1 " q = format comments; r = insert comment leader; n = recognise numbered lists, 1 = try to wrap before a one-letter word.
 set list
@@ -91,6 +97,8 @@ nmap <leader>es <C-w><C-v><C-l>:e ~/.vim/snippets/<cr>
 nmap <leader>l :LustyJuggler<cr>
 nmap <leader>k :LustyJugglePrevious<cr>
 nmap <leader>p :CtrlP<cr>
+nmap <leader>P :CtrlPTag<cr>
+nmap <silent> <leader>b :TagbarToggle<cr>
 let g:LustyJugglerDefaultMappings = 0
 
 nnoremap <up> <nop>
@@ -109,11 +117,49 @@ set showtabline=0
 nmap <leader><tab> :tabnext<cr>
 nmap <leader>n :tabnew<cr>
 
-set undofile
-set undodir=~/.vim/tmp/undo/
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir-=.
+set backupdir+=.
+set backupdir-=~/
+set backupdir^=~/.vim/backup/
+set backupdir^=./.vim-backup/
+set backup
+
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory=./.vim-swap//
+set directory+=~/.vim/swap//
+set directory+=~/tmp//
+set directory+=.
+
+" viminfo stores the the state of your previous editing session
+set viminfo+=n~/.vim/viminfo
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir=./.vim-undo//
+  set undodir+=~/.vim/undo//
+  set undofile
+endif
 
 " Ack
 let g:ackprg="ack\\ -H\\ --nocolor\\ --nogroup\\ --ignore-dir=lib\\ --ignore-dir=static\\ --ignore-dir=media\\ --ignore-dir=html_coverage"
+"let g:ackprg = 'ag --nogroup --nocolor --column'
 nmap <leader>a :Ack 
 
 set wildignore+=*.o,*.obj,.git,*.pyc,build,bin,include,lib,man,*.db
@@ -143,12 +189,17 @@ if has("autocmd")
     autocmd FileType mustache setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType markdown setlocal ts=4 sts=4 sw=4 expandtab
     autocmd FileType php setlocal ts=4 sts=4 sw=4 noexpandtab
+    autocmd FileType python set ft=python.django
 
     autocmd BufNewFile,BufRead *.less setlocal filetype=less
     autocmd FileType less setlocal ts=4 sts=4 sw=4 noexpandtab
 
     autocmd FileType javascript setlocal ts=4 sts=4 sw=4 noexpandtab
     autocmd FileType ruby setlocal ts=2 sts=2 sw=2 expandtab
+    autocmd FileType haskell setlocal ts=2 sts=2 sw=2 expandtab
+
+    autocmd BufNewFile,BufRead *.cljs setlocal filetype=clojure
+    autocmd FileType clojure setlocal ts=2 sts=2 sw=2 expandtab
 
     autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red ctermbg=3
     autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
